@@ -1,0 +1,4 @@
+### GET request to example server
+POST http://localhost:9090/api/category/
+
+###
