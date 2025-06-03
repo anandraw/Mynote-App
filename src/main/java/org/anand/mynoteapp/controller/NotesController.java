@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @RestController
@@ -18,18 +20,23 @@ public class NotesController{
     private NotesService notesService;
 
     @PostMapping("/")
-    public ResponseEntity<?> saveNote(@RequestBody NotesDto notesDto) throws Exception {
-        Boolean saveNote = notesService.saveNotes(notesDto);
-        if (saveNote) {
-            return CommonUtil.createBuildResponseMessage("notes save successfully",notesDto, HttpStatus.OK);
+    public ResponseEntity<?> saveNote(@RequestParam("notes") String notesJson,
+                                      @RequestParam(value = "file", required = false) MultipartFile file) {
+        try {
+            boolean saved = notesService.saveNotes(notesJson, file);
+            if (saved) {
+                return CommonUtil.createBuildResponse("Note saved successfully", HttpStatus.CREATED);
+            }
+            return CommonUtil.createErrorResponseMessage("Note not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception ex) {
+            return CommonUtil.createErrorResponseMessage("Error: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return CommonUtil.createErrorResponseMessage("notes not saved",HttpStatus.INTERNAL_SERVER_ERROR);
     }
     @GetMapping("/")
     public ResponseEntity<?> getAllNotes() {
         List<NotesDto> notes = notesService.getAllNotes();
         if (CollectionUtils.isEmpty(notes)) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build(); // 204 No Content
         }
         return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
     }

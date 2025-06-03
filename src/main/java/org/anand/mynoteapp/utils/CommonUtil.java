@@ -4,12 +4,30 @@ import org.anand.mynoteapp.handler.GenericResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CommonUtil {
 
+//    public static ResponseEntity<?> createBuildResponse(Object data, HttpStatus status) {
+//        GenericResponse response = GenericResponse.builder().responseStatus(status).status("success")
+//                .message("success").data(data).build();
+//        return response.create();
+//    }
+
     public static ResponseEntity<?> createBuildResponse(Object data, HttpStatus status) {
-        GenericResponse response = GenericResponse.builder().responseStatus(status).status("success")
-                .message("success").data(data).build();
-        return response.create();
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", status.name());
+        response.put("message", "success");
+        response.put("data", data); // ✅ add actual data here
+        return new ResponseEntity<>(response, status);
+    }
+
+    public static ResponseEntity<?> createErrorResponseMessage(String message, HttpStatus status) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", status.name());
+        response.put("message", message);
+        return new ResponseEntity<>(response, status);
     }
 
     public static ResponseEntity<?> createBuildResponseMessage(String message,Object data, HttpStatus status) {
@@ -26,12 +44,12 @@ public class CommonUtil {
         return response.create();
     }
 
-    public static ResponseEntity<?> createErrorResponseMessage(String message, HttpStatus status) {
-
-        GenericResponse response = GenericResponse.builder().responseStatus(status).status("failed").message(message)
-                .build();
-        return response.create();
-    }
+//    public static ResponseEntity<?> createErrorResponseMessage(String message, HttpStatus status) {
+//
+//        GenericResponse response = GenericResponse.builder().responseStatus(status).status("failed").message(message)
+//                .build();
+//        return response.create();
+//    }
 
 //    public static String getContentType(String originalFileName) {
 //        String extension = FilenameUtils.getExtension(originalFileName); // java_programing.pdf
