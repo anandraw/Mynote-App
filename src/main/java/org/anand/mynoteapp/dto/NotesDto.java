@@ -17,6 +17,7 @@ public class NotesDto {
     private String title;
     private String description;
     private CategoryDto category;
+    private FilesDto fileDetails;
     private Integer createdBy;
     private Date createdOn;
     private Integer updatedBy;
@@ -29,5 +30,15 @@ public class NotesDto {
     public static class CategoryDto {
         private Integer id;
         private String name;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class FilesDto {
+        private Integer id;
+        private String originalFileName;
+        private String displayFileName;
     }
 }

@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 public class Notes extends BaseModel {
 
     @Id
@@ -21,4 +23,7 @@ public class Notes extends BaseModel {
 
     @ManyToOne
     private Category category;
+
+    @ManyToOne
+    private FileDetails fileDetails;
 }
