@@ -1,6 +1,7 @@
 package org.anand.mynoteapp.controller;
 
 import org.anand.mynoteapp.dto.NotesDto;
+import org.anand.mynoteapp.dto.NotesResponse;
 import org.anand.mynoteapp.entity.FileDetails;
 import org.anand.mynoteapp.service.NotesService;
 import org.anand.mynoteapp.utils.CommonUtil;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 
 @RestController
@@ -55,6 +55,14 @@ public class NotesController{
         headers.setContentDispositionFormData("attachment", fileDetails.getOriginalFileName());
 
         return ResponseEntity.ok().headers(headers).body(data);
+    }
+
+    @GetMapping("/user-notes")
+    public ResponseEntity<?> getAllNotesByUser(@RequestParam(name = "pageNo",defaultValue = "0")
+                                               Integer pageNo, @RequestParam(name = "pageSize",defaultValue = "10") Integer pageSize){
+         Integer userId=1;
+         NotesResponse notes = notesService.getAllNotesByUser(userId,pageNo,pageSize);
+         return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
     }
 
 }

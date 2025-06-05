@@ -1,6 +1,7 @@
 package org.anand.mynoteapp.service;
 
 import org.anand.mynoteapp.dto.NotesDto;
+import org.anand.mynoteapp.dto.NotesResponse;
 import org.anand.mynoteapp.entity.FileDetails;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,4 +13,5 @@ public interface NotesService {
     public List<NotesDto> getAllNotes();
     public byte[] downloadFile(FileDetails fileDtls) throws Exception;
     public FileDetails getFileDetails(Integer id) throws Exception;
+    public NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize);
 }
