@@ -2,6 +2,7 @@ package org.anand.mynoteapp.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.anand.mynoteapp.dto.NotesDto;
+import org.anand.mynoteapp.dto.NotesResponse;
 import org.anand.mynoteapp.entity.FileDetails;
 import org.anand.mynoteapp.entity.Notes;
 import org.anand.mynoteapp.exception.ResourceNotFoundException;
@@ -12,6 +13,9 @@ import org.anand.mynoteapp.service.NotesService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StreamUtils;
@@ -137,5 +141,18 @@ public class NotesServiceImp implements NotesService {
     public FileDetails getFileDetails(Integer id) throws Exception {
         FileDetails fileDetails=fileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("File is not available"));
         return fileDetails;
+    }
+
+    @Override
+    public NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Notes> pageNotes = notesRepository.findByCreatedBy(userId, pageable);
+        List<NotesDto> notes = pageNotes.stream().map(n -> modelMapper.map(n,NotesDto.class)).toList();
+        NotesResponse notesResponse = NotesResponse.builder().notes(notes).pageNo(pageNotes.getNumber())
+                .pageSize(pageNotes.getSize()).totalElements(pageNotes.getTotalElements()).
+                totalPages(pageNotes.getTotalPages()).isFirst(pageNotes.isFirst())
+                .isLast(pageNotes.isLast()).build();
+
+        return notesResponse;
     }
 }
