@@ -246,4 +246,24 @@ public class NotesServiceImp implements NotesService {
         List<FavouriteNote> favouriteNotes = favouriteNoteRepository.findByUserId(userId);
         return favouriteNotes.stream().map(note -> modelMapper.map(note,FavouriteNoteDto.class)).toList();
     }
+
+    @Override
+    public boolean copyNotes(Integer noteId ) throws Exception {
+        Notes notes = notesRepository.findById(noteId).
+                orElseThrow(() -> new ResourceNotFoundException("Note not found with this :" + noteId));
+
+        Notes copyNote = Notes.builder()
+                .title(notes.getTitle())
+                .description(notes.getDescription())
+                .category(notes.getCategory())
+                .isDeleted(false)
+                .fileDetails(null)
+                .build();
+        Notes saveCopyNotes=notesRepository.save(copyNote);
+        if (!ObjectUtils.isEmpty(saveCopyNotes)){
+            return true;
+        }
+        return false;
+    }
+
 }

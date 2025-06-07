@@ -122,4 +122,14 @@ public class NotesController{
         }
         return CommonUtil.createBuildResponse(userFavoriteNotes, HttpStatus.OK);
     }
+
+
+    @GetMapping("/copy/{noteId}")
+    public ResponseEntity<?> copyNote(@PathVariable Integer noteId) throws Exception {
+        Boolean copyNotes = notesService.copyNotes(noteId);
+        if (copyNotes){
+            return CommonUtil.createBuildResponse("Great ! Copied Success", HttpStatus.CREATED);
+        }
+        return CommonUtil.createErrorResponseMessage("Copied Failed ! Try again..", HttpStatus.BAD_REQUEST);
+    }
 }
