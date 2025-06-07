@@ -1,5 +1,6 @@
 package org.anand.mynoteapp.service;
 
+import org.anand.mynoteapp.dto.FavouriteNoteDto;
 import org.anand.mynoteapp.dto.NotesDto;
 import org.anand.mynoteapp.dto.NotesResponse;
 import org.anand.mynoteapp.entity.FileDetails;
@@ -28,4 +29,10 @@ public interface NotesService {
     public void hardDeleteNotes(Integer id) throws Exception;
 
     public void emptyRecycleBin(int userId);
+
+    public void favoriteNotes(Integer noteId) throws Exception;
+
+    public void unFavoriteNotes(Integer noteId) throws Exception;
+
+    public List<FavouriteNoteDto> getUserFavoriteNotes() throws Exception;
 }
