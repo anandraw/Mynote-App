@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -22,6 +23,8 @@ public class NotesDto {
     private Date createdOn;
     private Integer updatedBy;
     private Date updatedOn;
+    private Boolean isDeleted;
+    private LocalDateTime deletedOn;
 
     @Getter
     @Setter
