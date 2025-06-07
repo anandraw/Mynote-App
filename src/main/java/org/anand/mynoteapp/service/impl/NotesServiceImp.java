@@ -1,12 +1,15 @@
 package org.anand.mynoteapp.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.anand.mynoteapp.dto.FavouriteNoteDto;
 import org.anand.mynoteapp.dto.NotesDto;
 import org.anand.mynoteapp.dto.NotesResponse;
+import org.anand.mynoteapp.entity.FavouriteNote;
 import org.anand.mynoteapp.entity.FileDetails;
 import org.anand.mynoteapp.entity.Notes;
 import org.anand.mynoteapp.exception.ResourceNotFoundException;
 import org.anand.mynoteapp.repository.CategoryRepository;
+import org.anand.mynoteapp.repository.FavouriteNoteRepository;
 import org.anand.mynoteapp.repository.FileRepository;
 import org.anand.mynoteapp.repository.NotesRepository;
 import org.anand.mynoteapp.service.NotesService;
@@ -49,6 +52,9 @@ public class NotesServiceImp implements NotesService {
 
     @Value("${file.upload.path}")
     private String uploadpath;
+
+    @Autowired
+    private FavouriteNoteRepository favouriteNoteRepository;
 
 
     @Override
@@ -216,5 +222,28 @@ public class NotesServiceImp implements NotesService {
         if (!CollectionUtils.isEmpty(recycleNotes)) {
             notesRepository.deleteAll(recycleNotes);
         }
+    }
+
+    @Override
+    public void favoriteNotes(Integer noteId) throws Exception {
+        Integer userId=1;
+        Notes notes = notesRepository.findById(noteId).
+                orElseThrow(() -> new ResourceNotFoundException("Note not found with this :" + noteId));
+        FavouriteNote favouriteNote = FavouriteNote.builder().note(notes).userId(userId).build();
+        favouriteNoteRepository.save(favouriteNote);
+    }
+
+    @Override
+    public void unFavoriteNotes(Integer noteId) throws Exception {
+        FavouriteNote favouriteNote = favouriteNoteRepository.findById(noteId).
+                orElseThrow(() -> new ResourceNotFoundException("Note not found with this :" + noteId));
+        favouriteNoteRepository.delete(favouriteNote);
+
+    }
+    @Override
+    public List<FavouriteNoteDto> getUserFavoriteNotes() throws Exception {
+        int userId=1;
+        List<FavouriteNote> favouriteNotes = favouriteNoteRepository.findByUserId(userId);
+        return favouriteNotes.stream().map(note -> modelMapper.map(note,FavouriteNoteDto.class)).toList();
     }
 }

@@ -1,5 +1,6 @@
 package org.anand.mynoteapp.controller;
 
+import org.anand.mynoteapp.dto.FavouriteNoteDto;
 import org.anand.mynoteapp.dto.NotesDto;
 import org.anand.mynoteapp.dto.NotesResponse;
 import org.anand.mynoteapp.entity.FileDetails;
@@ -100,4 +101,25 @@ public class NotesController{
         return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
     }
 
+    @GetMapping("/fav/{noteId}")
+    public ResponseEntity<?> favoriteNote(@PathVariable Integer noteId) throws Exception {
+        notesService.favoriteNotes(noteId);
+        return CommonUtil.createBuildResponse("Notes added Favorite", HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/un-fav/{favNotId}")
+    public ResponseEntity<?> unFavoriteNote(@PathVariable Integer favNotId) throws Exception {
+        notesService.unFavoriteNotes(favNotId);
+        return CommonUtil.createBuildResponse("Remove Favorite", HttpStatus.OK);
+    }
+
+    @GetMapping("/fav-note")
+    public ResponseEntity<?> getUserfavoriteNote() throws Exception {
+
+        List<FavouriteNoteDto> userFavoriteNotes = notesService.getUserFavoriteNotes();
+        if (CollectionUtils.isEmpty(userFavoriteNotes)) {
+            return ResponseEntity.noContent().build();
+        }
+        return CommonUtil.createBuildResponse(userFavoriteNotes, HttpStatus.OK);
+    }
 }
