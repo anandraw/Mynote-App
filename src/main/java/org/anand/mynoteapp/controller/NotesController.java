@@ -124,7 +124,7 @@ public class NotesController{
     }
 
 
-    @GetMapping("/copy  /{noteId}")
+    @GetMapping("/copy/{noteId}")
     public ResponseEntity<?> copyNote(@PathVariable Integer noteId) throws Exception {
         Boolean copyNotes = notesService.copyNotes(noteId);
         if (copyNotes){
