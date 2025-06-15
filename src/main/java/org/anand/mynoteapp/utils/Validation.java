@@ -5,6 +5,7 @@ import org.anand.mynoteapp.dto.UserDto;
 import org.anand.mynoteapp.enums.TodoStatus;
 import org.anand.mynoteapp.exception.ResourceNotFoundException;
 import org.anand.mynoteapp.repository.RoleRepository;
+import org.anand.mynoteapp.repository.UserRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -14,9 +15,11 @@ import java.util.List;
 public class Validation {
 
     private final RoleRepository roleRepository;
+    private final UserRepository userRepository;
 
-    public Validation(RoleRepository roleRepository) {
+    public Validation(RoleRepository roleRepository, UserRepository userRepository) {
         this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
     }
 
     public void todoValidation(TodoDto todo) throws Exception {
@@ -44,6 +47,11 @@ public class Validation {
 
         if (!StringUtils.hasText(userDto.getEmail()) || !userDto.getEmail().matches(Constants.EMAIL_REGEX)) {
             throw new IllegalArgumentException("email is invalid");
+        }else{
+           boolean userEmail = userRepository.existsByEmail(userDto.getEmail());
+           if (userEmail) {
+               throw new ExistDataException("Email already exist");
+           }
         }
 
         if (!StringUtils.hasText(userDto.getMobNo()) || !userDto.getMobNo().matches(Constants.MOBNO_REGEX)) {

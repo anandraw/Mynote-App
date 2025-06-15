@@ -1,6 +1,7 @@
 package org.anand.mynoteapp.exception;
 
 
+import org.anand.mynoteapp.utils.CommonUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,6 +22,10 @@ public class GlobalExceptionHandler {
         errorDetails.put("status", HttpStatus.NOT_FOUND.value());
         errorDetails.put("error", "Resource Not Found");
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
 
+    @ExceptionHandler(ExistDataException.class)
+    public ResponseEntity<?> handleExistDatabaseException(ExistDataException ex) {
+        return CommonUtil.createErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
     }
 }
