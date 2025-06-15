@@ -1,12 +1,23 @@
 package org.anand.mynoteapp.utils;
 
 import org.anand.mynoteapp.dto.TodoDto;
+import org.anand.mynoteapp.dto.UserDto;
 import org.anand.mynoteapp.enums.TodoStatus;
 import org.anand.mynoteapp.exception.ResourceNotFoundException;
+import org.anand.mynoteapp.repository.RoleRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import java.util.List;
 
 @Component
 public class Validation {
+
+    private final RoleRepository roleRepository;
+
+    public Validation(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
 
     public void todoValidation(TodoDto todo) throws Exception {
 
@@ -20,6 +31,38 @@ public class Validation {
         if (!statusFound) {
             throw new ResourceNotFoundException("invalid status");
         }
+    }
+    public void userValidation(UserDto userDto) throws Exception {
 
+        if (!StringUtils.hasText(userDto.getFirstName())) {
+            throw new IllegalArgumentException("first name is invalid");
+        }
+
+        if (!StringUtils.hasText(userDto.getLastName())) {
+            throw new IllegalArgumentException("last name is invalid");
+        }
+
+        if (!StringUtils.hasText(userDto.getEmail()) || !userDto.getEmail().matches(Constants.EMAIL_REGEX)) {
+            throw new IllegalArgumentException("email is invalid");
+        }
+
+        if (!StringUtils.hasText(userDto.getMobNo()) || !userDto.getMobNo().matches(Constants.MOBNO_REGEX)) {
+            throw new IllegalArgumentException("mobno is invalid");
+        }
+
+        if (CollectionUtils.isEmpty(userDto.getRoles())) {
+            throw new IllegalArgumentException("role is invalid");
+        } else {
+
+            List<Integer> roleIds = roleRepository.findAll().stream().map(r -> r.getRoleId()).toList();
+
+            List<Integer> invalidReqRoleids = userDto.getRoles().stream().map(r -> r.getRoleId())
+                    .filter(roleId -> !roleIds.contains(roleId)).toList();
+
+            if (!CollectionUtils.isEmpty(invalidReqRoleids)) {
+                throw new IllegalArgumentException("role is invalid" + invalidReqRoleids);
+            }
+
+        }
     }
 }
