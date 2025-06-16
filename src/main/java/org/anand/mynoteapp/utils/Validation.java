@@ -3,6 +3,7 @@ package org.anand.mynoteapp.utils;
 import org.anand.mynoteapp.dto.TodoDto;
 import org.anand.mynoteapp.dto.UserDto;
 import org.anand.mynoteapp.enums.TodoStatus;
+import org.anand.mynoteapp.exception.ExistDataException;
 import org.anand.mynoteapp.exception.ResourceNotFoundException;
 import org.anand.mynoteapp.repository.RoleRepository;
 import org.anand.mynoteapp.repository.UserRepository;
