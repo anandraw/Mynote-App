@@ -1,5 +1,6 @@
 package org.anand.mynoteapp.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.anand.mynoteapp.dto.UserDto;
 import org.anand.mynoteapp.service.UserService;
 import org.anand.mynoteapp.utils.CommonUtil;
@@ -19,8 +20,9 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/")
-    public ResponseEntity<?> registerUser(@RequestBody UserDto user) throws Exception {
-        Boolean register = userService.register(user);
+    public ResponseEntity<?> registerUser(@RequestBody UserDto user, HttpServletRequest request) throws Exception {
+        String url=CommonUtil.getUrl(request);
+        Boolean register = userService.register(user,url);
         if (register) {
             return CommonUtil.createBuildResponse("Register Success", HttpStatus.OK);
         }

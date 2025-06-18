@@ -2,6 +2,7 @@ package org.anand.mynoteapp.service.impl;
 
 import org.anand.mynoteapp.dto.EmailReuest;
 import org.anand.mynoteapp.dto.UserDto;
+import org.anand.mynoteapp.entity.AccountStatus;
 import org.anand.mynoteapp.entity.Role;
 import org.anand.mynoteapp.entity.User;
 import org.anand.mynoteapp.repository.RoleRepository;
@@ -15,6 +16,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -35,16 +37,21 @@ public class UserServiceImpl implements UserService {
     private EmailService emailService;
 
     @Override
-    public Boolean register(UserDto userDto) throws Exception {
+    public Boolean register(UserDto userDto,String url) throws Exception {
 
         validator.userValidation(userDto);
         modelMapper.typeMap(UserDto.class, User.class).addMappings(m -> m.skip(User::setRoles));
         User user = modelMapper.map(userDto, User.class);
         setRole(userDto, user);
+        AccountStatus status = AccountStatus.builder()
+                .isActive(false)
+                .verificationCode(UUID.randomUUID().toString())
+                .build();
+        user.setStatus(status);
         User saveUser = userRepository.save(user);
         if (!ObjectUtils.isEmpty(saveUser)) {
             // send email
-            emailSend(saveUser);
+            emailSend(saveUser,url);
             return true;
         }
         return false;
@@ -58,14 +65,17 @@ public class UserServiceImpl implements UserService {
         user.setRoles(roles);
     }
 
-    private void emailSend(User user) throws Exception {
+    private void emailSend(User user,String url) throws Exception {
 
-        String message="Hi,<b>"+user.getFirstName()+"</b> "
-                + "<br> Your account register successfully.<br>"
+        String message="Hi,<b>[[username]]</b> "
+                + "<br> Your account register sucessfully.<br>"
                 +"<br> Click the below link verify & Active your account <br>"
-                +"<a href='#'>Click Here</a> <br><br>"
+                +"<a href='[[url]]'>Click Here</a> <br><br>"
                 +"Thanks,<br>Enotes.com"
                 ;
+
+        message=message.replace("[[username]]", user.getFirstName());
+        message=message.replace("[[url]]", url+"/api/v1/home/verify?uid="+user.getUserId()+"&&code="+user.getStatus().getVerificationCode());
 
         EmailReuest emailReuest=EmailReuest.builder()
                 .to(user.getEmail())
