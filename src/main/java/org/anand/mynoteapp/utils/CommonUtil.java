@@ -1,5 +1,6 @@
 package org.anand.mynoteapp.utils;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.anand.mynoteapp.handler.GenericResponse;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
@@ -9,12 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommonUtil {
-
-//    public static ResponseEntity<?> createBuildResponse(Object data, HttpStatus status) {
-//        GenericResponse response = GenericResponse.builder().responseStatus(status).status("success")
-//                .message("success").data(data).build();
-//        return response.create();
-//    }
 
     public static ResponseEntity<?> createBuildResponse(Object data, HttpStatus status) {
         Map<String, Object> response = new HashMap<>();
@@ -45,13 +40,6 @@ public class CommonUtil {
         return response.create();
     }
 
-//    public static ResponseEntity<?> createErrorResponseMessage(String message, HttpStatus status) {
-//
-//        GenericResponse response = GenericResponse.builder().responseStatus(status).status("failed").message(message)
-//                .build();
-//        return response.create();
-//    }
-
     public static String getContentType(String originalFileName) {
         String extension = FilenameUtils.getExtension(originalFileName); // java_programing.pdf
 
@@ -70,13 +58,13 @@ public class CommonUtil {
                 return "application/octet-stream";
         }
     }
-//
-//    public static String getUrl(HttpServletRequest request) {
-//        String apiUrl = request.getRequestURL().toString(); // http:localhost:8080/api/v1/auth
-//        apiUrl = apiUrl.replace(request.getServletPath(), ""); // http:localhost:8080
-//        return apiUrl;
-//    }
-//
+
+    public static String getUrl(HttpServletRequest request) {
+        String url = request.getRequestURL().toString(); //http:localhost:9090/api/v1/auth
+         url = url.replace(request.getRequestURI(), "");//// http:localhost:9090
+        return url;
+    }
+
 //    public static User getLoggedInUser() {
 //        try {
 //            CustomUserDetails logUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()

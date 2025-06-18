@@ -1,6 +1,7 @@
 package org.anand.mynoteapp.exception;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.anand.mynoteapp.utils.CommonUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -28,5 +30,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleExistDatabaseException(ExistDataException ex) {
         return CommonUtil.createErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
     }
-    //sa
+
+    @ExceptionHandler(SuccessException.class)
+    public ResponseEntity<?> handleSccusessException(SuccessException e){
+        log.error("GlobalExceptionHandler :: handleException ::", e.getMessage());
+        return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.OK);
+    }
 }
