@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.anand.mynoteapp.utils.CommonUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +33,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(SuccessException.class)
     public ResponseEntity<?> handleSccusessException(SuccessException e){
-        log.error("GlobalExceptionHandler :: handleException ::", e.getMessage());
+        //log.error("GlobalExceptionHandler :: handleException ::", e.getMessage());
         return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException e) {
+        return CommonUtil.createErrorResponse(e.getMessage(),HttpStatus.BAD_REQUEST);
     }
 }

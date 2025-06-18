@@ -1,16 +1,24 @@
 package org.anand.mynoteapp.service.impl;
 
 import org.anand.mynoteapp.dto.EmailReuest;
+import org.anand.mynoteapp.dto.LoginRequest;
+import org.anand.mynoteapp.dto.LoginResponce;
 import org.anand.mynoteapp.dto.UserDto;
 import org.anand.mynoteapp.entity.AccountStatus;
 import org.anand.mynoteapp.entity.Role;
 import org.anand.mynoteapp.entity.User;
 import org.anand.mynoteapp.repository.RoleRepository;
 import org.anand.mynoteapp.repository.UserRepository;
+import org.anand.mynoteapp.security.CustomUserDetalis;
 import org.anand.mynoteapp.service.UserService;
 import org.anand.mynoteapp.utils.Validation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import java.util.HashSet;
@@ -36,6 +44,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private AuthenticationManager  manager;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public Boolean register(UserDto userDto,String url) throws Exception {
 
@@ -48,6 +62,7 @@ public class UserServiceImpl implements UserService {
                 .verificationCode(UUID.randomUUID().toString())
                 .build();
         user.setStatus(status);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User saveUser = userRepository.save(user);
         if (!ObjectUtils.isEmpty(saveUser)) {
             // send email
@@ -56,6 +71,7 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+
 
     private void setRole(UserDto userDto, User user) {
         List<Integer> roleIds = userDto.getRoles().stream()
@@ -84,5 +100,24 @@ public class UserServiceImpl implements UserService {
                 .message(message)
                 .build();
         emailService.sendEmail(emailReuest);
+    }
+
+    //login logic
+    @Override
+    public LoginResponce login(LoginRequest loginRequest) throws Exception {
+        Authentication authenticate = manager.authenticate(new UsernamePasswordAuthenticationToken(
+                loginRequest.getEmail(), loginRequest.getPassword()));
+        if (authenticate.isAuthenticated()){
+            CustomUserDetalis customUserDetalis=(CustomUserDetalis) authenticate.getPrincipal();
+
+            String token="safdghhfdssaghnggsdsgfvswaefqwaef";
+
+            LoginResponce login = LoginResponce.builder()
+                    .user(modelMapper.map(customUserDetalis.getUser(), UserDto.class))
+                    .token(token)
+                    .build();
+            return login;
+        }
+        return null;
     }
 }
