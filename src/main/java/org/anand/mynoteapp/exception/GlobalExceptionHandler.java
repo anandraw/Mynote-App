@@ -41,4 +41,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException e) {
         return CommonUtil.createErrorResponse(e.getMessage(),HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(JwtTokenExpiredException.class)
+    public ResponseEntity<?> handleJwtTokenExpiredException(JwtTokenExpiredException e) {
+        return CommonUtil.createErrorResponse(e.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
 }

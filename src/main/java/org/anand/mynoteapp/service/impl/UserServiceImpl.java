@@ -10,6 +10,7 @@ import org.anand.mynoteapp.entity.User;
 import org.anand.mynoteapp.repository.RoleRepository;
 import org.anand.mynoteapp.repository.UserRepository;
 import org.anand.mynoteapp.security.CustomUserDetalis;
+import org.anand.mynoteapp.service.JwtService;
 import org.anand.mynoteapp.service.UserService;
 import org.anand.mynoteapp.utils.Validation;
 import org.modelmapper.ModelMapper;
@@ -49,6 +50,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Override
     public Boolean register(UserDto userDto,String url) throws Exception {
@@ -110,7 +114,7 @@ public class UserServiceImpl implements UserService {
         if (authenticate.isAuthenticated()){
             CustomUserDetalis customUserDetalis=(CustomUserDetalis) authenticate.getPrincipal();
 
-            String token="safdghhfdssaghnggsdsgfvswaefqwaef";
+            String token= jwtService.generateToken(customUserDetalis.getUser());
 
             LoginResponce login = LoginResponce.builder()
                     .user(modelMapper.map(customUserDetalis.getUser(), UserDto.class))
