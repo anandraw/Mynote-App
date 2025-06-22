@@ -3,7 +3,7 @@ package org.anand.mynoteapp.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import org.anand.mynoteapp.dto.LoginRequest;
 import org.anand.mynoteapp.dto.LoginResponce;
-import org.anand.mynoteapp.dto.UserDto;
+import org.anand.mynoteapp.dto.UserRequest;
 import org.anand.mynoteapp.service.UserService;
 import org.anand.mynoteapp.utils.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/")
-    public ResponseEntity<?> registerUser(@RequestBody UserDto user, HttpServletRequest request) throws Exception {
+    public ResponseEntity<?> registerUser(@RequestBody UserRequest user, HttpServletRequest request) throws Exception {
         String url=CommonUtil.getUrl(request);
         Boolean register = userService.register(user,url);
         if (register) {

@@ -1,10 +1,13 @@
 package org.anand.mynoteapp.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.anand.mynoteapp.entity.User;
 import org.anand.mynoteapp.handler.GenericResponse;
+import org.anand.mynoteapp.security.CustomUserDetalis;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,14 +75,13 @@ public class CommonUtil {
         return url;
     }
 
-//    public static User getLoggedInUser() {
-//        try {
-//            CustomUserDetails logUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
-//                    .getPrincipal();
-//            return logUser.getUser();
-//        } catch (Exception e) {
-//            throw e;
-//        }
-//
-//    }
+    public static User getLoggedInUser() {
+        try {
+            CustomUserDetalis logUser = (CustomUserDetalis) SecurityContextHolder.getContext().getAuthentication()
+                    .getPrincipal();
+            return logUser.getUser();
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }
