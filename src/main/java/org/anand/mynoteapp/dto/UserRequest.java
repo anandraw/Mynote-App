@@ -9,7 +9,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-public class UserDto {
+public class UserRequest {
 
     private String firstName;
     private String lastName;
@@ -25,5 +25,6 @@ public class UserDto {
     @Builder
     public static class RoleDto {
         private Integer roleId;
+        private String roleName;
     }
 }

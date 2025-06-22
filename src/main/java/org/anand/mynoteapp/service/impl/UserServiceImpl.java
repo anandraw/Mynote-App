@@ -3,7 +3,7 @@ package org.anand.mynoteapp.service.impl;
 import org.anand.mynoteapp.dto.EmailReuest;
 import org.anand.mynoteapp.dto.LoginRequest;
 import org.anand.mynoteapp.dto.LoginResponce;
-import org.anand.mynoteapp.dto.UserDto;
+import org.anand.mynoteapp.dto.UserRequest;
 import org.anand.mynoteapp.entity.AccountStatus;
 import org.anand.mynoteapp.entity.Role;
 import org.anand.mynoteapp.entity.User;
@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -55,10 +54,10 @@ public class UserServiceImpl implements UserService {
     private JwtService jwtService;
 
     @Override
-    public Boolean register(UserDto userDto,String url) throws Exception {
+    public Boolean register(UserRequest userDto, String url) throws Exception {
 
         validator.userValidation(userDto);
-        modelMapper.typeMap(UserDto.class, User.class).addMappings(m -> m.skip(User::setRoles));
+        modelMapper.typeMap(UserRequest.class, User.class).addMappings(m -> m.skip(User::setRoles));
         User user = modelMapper.map(userDto, User.class);
         setRole(userDto, user);
         AccountStatus status = AccountStatus.builder()
@@ -77,9 +76,9 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    private void setRole(UserDto userDto, User user) {
-        List<Integer> roleIds = userDto.getRoles().stream()
-                .map(UserDto.RoleDto::getRoleId)
+    private void setRole(UserRequest userRequest, User user) {
+        List<Integer> roleIds = userRequest.getRoles().stream()
+                .map(UserRequest.RoleDto::getRoleId)
                 .toList();
         Set<Role> roles = new HashSet<>(roleRepository.findAllById(roleIds));
         user.setRoles(roles);
@@ -117,7 +116,7 @@ public class UserServiceImpl implements UserService {
             String token= jwtService.generateToken(customUserDetalis.getUser());
 
             LoginResponce login = LoginResponce.builder()
-                    .user(modelMapper.map(customUserDetalis.getUser(), UserDto.class))
+                    .user(modelMapper.map(customUserDetalis.getUser(), UserRequest.class))
                     .token(token)
                     .build();
             return login;

@@ -1,7 +1,7 @@
 package org.anand.mynoteapp.utils;
 
 import org.anand.mynoteapp.dto.TodoDto;
-import org.anand.mynoteapp.dto.UserDto;
+import org.anand.mynoteapp.dto.UserRequest;
 import org.anand.mynoteapp.enums.TodoStatus;
 import org.anand.mynoteapp.exception.ExistDataException;
 import org.anand.mynoteapp.exception.ResourceNotFoundException;
@@ -36,36 +36,36 @@ public class Validation {
             throw new ResourceNotFoundException("invalid status");
         }
     }
-    public void userValidation(UserDto userDto) throws Exception {
+    public void userValidation(UserRequest userRequest) throws Exception {
 
-        if (!StringUtils.hasText(userDto.getFirstName())) {
+        if (!StringUtils.hasText(userRequest.getFirstName())) {
             throw new IllegalArgumentException("first name is invalid");
         }
 
-        if (!StringUtils.hasText(userDto.getLastName())) {
+        if (!StringUtils.hasText(userRequest.getLastName())) {
             throw new IllegalArgumentException("last name is invalid");
         }
 
-        if (!StringUtils.hasText(userDto.getEmail()) || !userDto.getEmail().matches(Constants.EMAIL_REGEX)) {
+        if (!StringUtils.hasText(userRequest.getEmail()) || !userRequest.getEmail().matches(Constants.EMAIL_REGEX)) {
             throw new IllegalArgumentException("email is invalid");
         }else{
-           boolean userEmail = userRepository.existsByEmail(userDto.getEmail());
+           boolean userEmail = userRepository.existsByEmail(userRequest.getEmail());
            if (userEmail) {
                throw new ExistDataException("Email already exist");
            }
         }
 
-        if (!StringUtils.hasText(userDto.getMobNo()) || !userDto.getMobNo().matches(Constants.MOBNO_REGEX)) {
+        if (!StringUtils.hasText(userRequest.getMobNo()) || !userRequest.getMobNo().matches(Constants.MOBNO_REGEX)) {
             throw new IllegalArgumentException("mobno is invalid");
         }
 
-        if (CollectionUtils.isEmpty(userDto.getRoles())) {
+        if (CollectionUtils.isEmpty(userRequest.getRoles())) {
             throw new IllegalArgumentException("role is invalid");
         } else {
 
             List<Integer> roleIds = roleRepository.findAll().stream().map(r -> r.getRoleId()).toList();
 
-            List<Integer> invalidReqRoleids = userDto.getRoles().stream().map(r -> r.getRoleId())
+            List<Integer> invalidReqRoleids = userRequest.getRoles().stream().map(r -> r.getRoleId())
                     .filter(roleId -> !roleIds.contains(roleId)).toList();
 
             if (!CollectionUtils.isEmpty(invalidReqRoleids)) {
