@@ -14,5 +14,4 @@ public class MynoteAppApplication {
         SpringApplication.run(MynoteAppApplication.class, args);
         System.out.println("Mynote-App-Application");
     }
-
 }
