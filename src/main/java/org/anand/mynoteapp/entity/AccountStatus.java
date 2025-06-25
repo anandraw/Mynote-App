@@ -19,4 +19,5 @@ public class AccountStatus {
     private Integer id;
     private boolean isActive;
     private String verificationCode;
+    private String passwordResetToken;
 }
