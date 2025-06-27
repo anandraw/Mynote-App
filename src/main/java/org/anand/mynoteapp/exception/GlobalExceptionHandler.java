@@ -23,27 +23,31 @@ public class GlobalExceptionHandler {
         errorDetails.put("message", ex.getMessage());
         errorDetails.put("status", HttpStatus.NOT_FOUND.value());
         errorDetails.put("error", "Resource Not Found");
+        log.error("GlobalExceptionHandler : handleResourceNotFoundException() : {}", ex.getMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ExistDataException.class)
     public ResponseEntity<?> handleExistDatabaseException(ExistDataException ex) {
+        log.error("GlobalExceptionHandler : handleExistDatabaseException() : {}", ex.getMessage());
         return CommonUtil.createErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(SuccessException.class)
     public ResponseEntity<?> handleSccusessException(SuccessException e){
-        //log.error("GlobalExceptionHandler :: handleException ::", e.getMessage());
+        log.error("GlobalExceptionHandler : handleSccusessException() : {}", e.getMessage());
         return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.OK);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException e) {
+        log.error("GlobalExceptionHandler : handleBadCredentialsException() : {}", e.getMessage());
         return CommonUtil.createErrorResponse(e.getMessage(),HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(JwtTokenExpiredException.class)
     public ResponseEntity<?> handleJwtTokenExpiredException(JwtTokenExpiredException e) {
+        log.error("GlobalExceptionHandler : handleJwtTokenExpiredException() : {}", e.getMessage());
         return CommonUtil.createErrorResponse(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }

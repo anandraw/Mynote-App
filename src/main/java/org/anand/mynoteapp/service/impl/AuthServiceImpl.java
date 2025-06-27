@@ -1,5 +1,6 @@
 package org.anand.mynoteapp.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.anand.mynoteapp.dto.EmailReuest;
 import org.anand.mynoteapp.dto.LoginRequest;
 import org.anand.mynoteapp.dto.LoginResponce;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -55,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Boolean register(UserRequest userDto, String url) throws Exception {
-
+        log.info("AuthServiceImpl : register() : Execution Start");
         validator.userValidation(userDto);
         modelMapper.typeMap(UserRequest.class, User.class).addMappings(m -> m.skip(User::setRoles));
         User user = modelMapper.map(userDto, User.class);
@@ -67,11 +69,14 @@ public class AuthServiceImpl implements AuthService {
         user.setStatus(status);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User saveUser = userRepository.save(user);
+        log.info("Message : {}","User Register success");
         if (!ObjectUtils.isEmpty(saveUser)) {
             // send email
             emailSend(saveUser,url);
+            log.info("AuthServiceImpl : register() : Execution End");
             return true;
         }
+        log.info("Error : {}","user not saved");
         return false;
     }
 
@@ -108,6 +113,7 @@ public class AuthServiceImpl implements AuthService {
     //login logic
     @Override
     public LoginResponce login(LoginRequest loginRequest) throws Exception {
+        log.info("AuthServiceImpl : login() : Execution Start");
         Authentication authenticate = manager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getEmail(), loginRequest.getPassword()));
         if (authenticate.isAuthenticated()){
@@ -119,6 +125,7 @@ public class AuthServiceImpl implements AuthService {
                     .user(modelMapper.map(customUserDetalis.getUser(), UserRequest.class))
                     .token(token)
                     .build();
+            log.info("AuthServiceImpl : login() : Execution End");
             return login;
         }
         return null;
