@@ -4,20 +4,21 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Entity
+@Builder
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@AllArgsConstructor
+@Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Category extends BaseModel {
+public class Todo extends BaseModel{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String name;
-    private String description;
-    private Boolean isActive;
-    private Boolean isDeleted;
+
+    private String title;
+
+    @Column(name = "status")
+    private Integer statusId;
 }

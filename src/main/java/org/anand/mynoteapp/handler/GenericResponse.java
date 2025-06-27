@@ -23,7 +23,7 @@ public class GenericResponse {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("status", responseStatus);
         map.put("message", message);
-        if (ObjectUtils.isEmpty(data)) {
+        if (!ObjectUtils.isEmpty(data)) {
             map.put("data", data);
         }
         return new ResponseEntity<>(map, responseStatus);
