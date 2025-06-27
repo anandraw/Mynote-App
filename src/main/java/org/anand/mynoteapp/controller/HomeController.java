@@ -5,6 +5,8 @@ import org.anand.mynoteapp.dto.PswdResetRequest;
 import org.anand.mynoteapp.service.HomeService;
 import org.anand.mynoteapp.service.UserService;
 import org.anand.mynoteapp.utils.CommonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/home")
 public class HomeController {
 
+    Logger log= LoggerFactory.getLogger(HomeController.class);
+
     @Autowired
     private HomeService homeService;
 
@@ -22,10 +26,12 @@ public class HomeController {
 
     @GetMapping("/verify")
     public ResponseEntity<?> verifyUserAccount(@RequestParam Integer uid,@RequestParam String code) throws Exception{
+        log.info("HomeController : verifyAccount() : Execution Start");
         Boolean isVerify = homeService.verifyAccount(uid, code);
         if (isVerify) {
             CommonUtil.createBuildResponse("Account Verification Success", HttpStatus.OK);
         }
+        log.info("HomeController : verifyUserAccount() : Execution End");
         return CommonUtil.createErrorResponseMessage("Invalid Verification link", HttpStatus.BAD_REQUEST);
 
     }

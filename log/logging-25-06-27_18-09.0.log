@@ -1,0 +1,4 @@
+2025-27-09 18:09:25.037 INFO  [http-nio-9090-exec-1] o.a.m.controller.AuthController - AuthController : loginUser() : Execution Start
+2025-27-09 18:09:25.040 INFO  [http-nio-9090-exec-1] o.a.m.service.impl.AuthServiceImpl - AuthServiceImpl : login() : Execution Start
+2025-27-09 18:09:25.199 ERROR [http-nio-9090-exec-1] o.a.m.e.GlobalExceptionHandler - GlobalExceptionHandler : handleBadCredentialsException() : Bad credentials
+2025-27-09 18:09:25.223 WARN  [http-nio-9090-exec-1] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.security.authentication.BadCredentialsException: Bad credentials]

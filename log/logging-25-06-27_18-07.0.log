@@ -1,0 +1,7 @@
+2025-27-07 18:07:56.484 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.2.Final
+2025-27-07 18:07:56.556 INFO  [restartedMain] o.a.mynoteapp.MynoteAppApplication - Starting MynoteAppApplication using Java 23.0.1 with PID 181084 (C:\Anand\Project\Mynote-App\target\classes started by anand in C:\Anand\Project\Mynote-App)
+2025-27-07 18:07:56.558 INFO  [restartedMain] o.a.mynoteapp.MynoteAppApplication - The following 1 profile is active: "dev"
+2025-27-07 18:07:56.675 INFO  [restartedMain] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-27-07 18:07:56.676 INFO  [restartedMain] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-27-07 18:07:58.309 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-27-07 18:07:58.444 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 108 ms. Found 7 JPA repository interfaces.
