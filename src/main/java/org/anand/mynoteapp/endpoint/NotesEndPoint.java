@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import static org.anand.mynoteapp.utils.Constants.DEFAULT_PAGE_NO;
+import static org.anand.mynoteapp.utils.Constants.DEFAULT_PAGE_SIZE;
 
 
 @Tag(name = "Notes", description = "Apis for notes controller")
@@ -45,8 +47,8 @@ public interface NotesEndPoint {
             description = "Get all notes of the current user with pagination"
     )
     @GetMapping("/user-notes")
-    public ResponseEntity<?> getAllNotesByUser(@RequestParam(name = "pageNo",defaultValue = "0")
-                                               Integer pageNo, @RequestParam(name = "pageSize",defaultValue = "10") Integer pageSize);
+    public ResponseEntity<?> getAllNotesByUser(@RequestParam(name = "pageNo",defaultValue = DEFAULT_PAGE_NO) Integer pageNo,
+                                               @RequestParam(name = "pageSize",defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize);
 
     @Operation(
             summary = "Soft delete a note",
