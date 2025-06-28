@@ -3,6 +3,7 @@ package org.anand.mynoteapp.controller;
 import org.anand.mynoteapp.dto.FavouriteNoteDto;
 import org.anand.mynoteapp.dto.NotesDto;
 import org.anand.mynoteapp.dto.NotesResponse;
+import org.anand.mynoteapp.endpoint.NotesEndPoint;
 import org.anand.mynoteapp.entity.FileDetails;
 import org.anand.mynoteapp.service.NotesService;
 import org.anand.mynoteapp.utils.CommonUtil;
@@ -17,13 +18,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/notes")
-public class NotesController{
+public class NotesController implements NotesEndPoint {
     
     @Autowired
     private NotesService notesService;
 
-    @PostMapping("/")
+    @Override
     public ResponseEntity<?> saveNote(@RequestParam("notes") String notesJson,
                                       @RequestParam(value = "file", required = false) MultipartFile file) {
         try {
@@ -36,7 +36,8 @@ public class NotesController{
             return CommonUtil.createErrorResponseMessage("Error: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-    @GetMapping("/")
+
+    @Override
     public ResponseEntity<?> getAllNotes() {
         List<NotesDto> notes = notesService.getAllNotes();
         if (CollectionUtils.isEmpty(notes)) {
@@ -45,7 +46,7 @@ public class NotesController{
         return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
     }
 
-    @GetMapping("/download/{id}")
+    @Override
     public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception {
         FileDetails fileDetails = notesService.getFileDetails(id);
         byte[] data = notesService.downloadFile(fileDetails);
@@ -58,38 +59,38 @@ public class NotesController{
         return ResponseEntity.ok().headers(headers).body(data);
     }
 
-    @GetMapping("/user-notes")
+    @Override
     public ResponseEntity<?> getAllNotesByUser(@RequestParam(name = "pageNo",defaultValue = "0")
                                                Integer pageNo, @RequestParam(name = "pageSize",defaultValue = "10") Integer pageSize){
         NotesResponse notes = notesService.getAllNotesByUser(pageNo,pageSize);
         return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
     }
 
-    @GetMapping("/delete/{id}")
+   @Override
     public ResponseEntity<?> deleteNotes(@PathVariable Integer id) throws Exception {
         notesService.softDeleteNotes(id);
         return CommonUtil.createBuildResponse("Note deleted successfully", HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @Override
     public ResponseEntity<?> hardDeleteNotes(@PathVariable Integer id) throws Exception {
         notesService.hardDeleteNotes(id);
         return CommonUtil.createBuildResponse("Note deleted successfully", HttpStatus.OK);
     }
 
-    @GetMapping("/restore/{id}")
+   @Override
     public ResponseEntity<?> restoreNotes(@PathVariable Integer id) throws Exception {
         notesService.restoreNotes(id);
         return CommonUtil.createBuildResponse("Note restored successfully", HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete")
+   @Override
     public ResponseEntity<?> emptyUserRecyleBin() throws Exception {
         notesService.emptyRecycleBin();
         return CommonUtil.createBuildResponse("Recycle Bin empty successfully", HttpStatus.OK);
     }
 
-    @GetMapping("/recycle-bin")
+    @Override
     public ResponseEntity<?> getUserRecycleBinNotes() throws Exception {
         List<NotesDto> notes = notesService.getUserRecycleBinNotes();
         if (CollectionUtils.isEmpty(notes)) {
@@ -98,19 +99,19 @@ public class NotesController{
         return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
     }
 
-    @GetMapping("/fav/{noteId}")
+    @Override
     public ResponseEntity<?> favoriteNote(@PathVariable Integer noteId) throws Exception {
         notesService.favoriteNotes(noteId);
         return CommonUtil.createBuildResponse("Notes added Favorite", HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/un-fav/{favNotId}")
+    @Override
     public ResponseEntity<?> unFavoriteNote(@PathVariable Integer favNotId) throws Exception {
         notesService.unFavoriteNotes(favNotId);
         return CommonUtil.createBuildResponse("Remove Favorite", HttpStatus.OK);
     }
 
-    @GetMapping("/fav-note")
+    @Override
     public ResponseEntity<?> getUserfavoriteNote() throws Exception {
 
         List<FavouriteNoteDto> userFavoriteNotes = notesService.getUserFavoriteNotes();
@@ -121,7 +122,7 @@ public class NotesController{
     }
 
 
-    @GetMapping("/copy/{noteId}")
+    @Override
     public ResponseEntity<?> copyNote(@PathVariable Integer noteId) throws Exception {
         Boolean copyNotes = notesService.copyNotes(noteId);
         if (copyNotes){

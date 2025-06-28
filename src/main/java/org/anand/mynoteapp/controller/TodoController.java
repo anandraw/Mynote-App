@@ -1,6 +1,7 @@
 package org.anand.mynoteapp.controller;
 
 import org.anand.mynoteapp.dto.TodoDto;
+import org.anand.mynoteapp.endpoint.TodoEndPoint;
 import org.anand.mynoteapp.service.TodoService;
 import org.anand.mynoteapp.utils.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/todo")
-public class TodoController {
+public class TodoController implements TodoEndPoint {
 
     @Autowired
     private TodoService todoService;
 
-    @PostMapping("/")
+    @Override
     public ResponseEntity<?> saveTodo(@RequestBody TodoDto todoDto) throws Exception {
         boolean saveTodo= todoService.saveTodo(todoDto);
         if (saveTodo){
@@ -26,12 +26,13 @@ public class TodoController {
         return CommonUtil.createErrorResponseMessage("Todo Not Saved",HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/{id}")
+    @Override
     public ResponseEntity<?> findById(@PathVariable Integer id) throws Exception {
         TodoDto toById = todoService.getToById(id);
         return CommonUtil.createBuildResponse(toById, HttpStatus.OK);
     }
-    @GetMapping("/list")
+
+    @Override
     public ResponseEntity<?> getAllTodoByUser() throws Exception {
         List<TodoDto> todoList = todoService.getTodoByUser();
         if (CollectionUtils.isEmpty(todoList)) {

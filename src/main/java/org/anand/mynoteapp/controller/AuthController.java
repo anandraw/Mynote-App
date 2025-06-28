@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.anand.mynoteapp.dto.LoginRequest;
 import org.anand.mynoteapp.dto.LoginResponce;
 import org.anand.mynoteapp.dto.UserRequest;
+import org.anand.mynoteapp.endpoint.AuthEndPoint;
 import org.anand.mynoteapp.service.AuthService;
 import org.anand.mynoteapp.utils.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/user")
-public class AuthController {
+public class AuthController implements AuthEndPoint {
 
     @Autowired
     private AuthService authService;
 
-    @PostMapping("/")
+    @Override
     public ResponseEntity<?> registerUser(@RequestBody UserRequest user, HttpServletRequest request) throws Exception {
         log.info("AuthController : registerUser() : Exceution Start");
         String url=CommonUtil.getUrl(request);
@@ -37,7 +37,7 @@ public class AuthController {
         return CommonUtil.createErrorResponse("Register Failed", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @PostMapping("/login")
+    @Override
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) throws Exception {
            log.info("AuthController : loginUser() : Execution Start");
            LoginResponce loginResponce = authService.login(loginRequest);

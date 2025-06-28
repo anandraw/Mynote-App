@@ -19,6 +19,7 @@ public class CategoryController implements CategoryEndpoint {
     @Autowired
     private CategoryService categoryService;
 
+    @Override
     public ResponseEntity<?> saveCategory(CategoryDto category) {
         Boolean savedCategory = categoryService.saveCategory(category);
         if (savedCategory) {
@@ -60,6 +61,7 @@ public class CategoryController implements CategoryEndpoint {
         }
     }
 
+    @Override
     public ResponseEntity<?> deleteCategoryById(Integer id){
         Boolean deleted = categoryService.deleteCategory(id);
         if (deleted){
