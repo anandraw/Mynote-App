@@ -60,8 +60,9 @@ public class NotesController implements NotesEndPoint {
     }
 
     @Override
-    public ResponseEntity<?> getAllNotesByUser(@RequestParam(name = "pageNo",defaultValue = "0")
-                                               Integer pageNo, @RequestParam(name = "pageSize",defaultValue = "10") Integer pageSize){
+    public ResponseEntity<?> getAllNotesByUser(
+            @RequestParam(name = "pageNo",defaultValue = "0") Integer pageNo,
+            @RequestParam(name = "pageSize",defaultValue = "10") Integer pageSize){
         NotesResponse notes = notesService.getAllNotesByUser(pageNo,pageSize);
         return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
     }
