@@ -51,7 +51,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(req -> req
-                        .requestMatchers("/api/v1/home/**", "/api/v1/user/**").permitAll()
+                        .requestMatchers(
+                                "/api/v1/home/**",
+                                "/api/v1/user/**",
+                                "/enotes-doc/**",          // custom Swagger UI base
+                                "/swagger-ui/**",          // fallback if not using custom path
+                                "/v3/api-docs/**",
+                                "/enotes-api-doc/**",
+                                "/swagger-resources/**",
+                                "/webjars/**",
+                                "/error", "/favicon.ico").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
