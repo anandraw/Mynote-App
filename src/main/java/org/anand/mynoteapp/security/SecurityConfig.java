@@ -60,6 +60,7 @@ public class SecurityConfig {
                                 "/enotes-api-doc/**",
                                 "/swagger-resources/**",
                                 "/webjars/**",
+                                "/actuator/**",
                                 "/error", "/favicon.ico").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
